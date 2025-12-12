@@ -1,0 +1,79 @@
+.participant-avatar {
+  @apply h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center;
+  
+  .avatar-text {
+    @apply text-sm font-medium text-primary-600 dark:text-primary-200;
+  }
+}
+
+.status-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  
+  &.status-active {
+    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300;
+  }
+  
+  &.status-provisioning {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300;
+  }
+  
+  &.status-deprovisioning {
+    @apply bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300;
+  }
+  
+  &.status-failed {
+    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300;
+  }
+}
+
+.action-button {
+  @apply text-sm font-medium transition-colors duration-200;
+  
+  &:hover {
+    @apply transform scale-105;
+  }
+}
+
+.pagination-button {
+  @apply relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors duration-200;
+  
+  &.active {
+    @apply z-10 bg-primary-50 dark:bg-primary-900 border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-200;
+  }
+  
+  &:not(.active) {
+    @apply bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700;
+  }
+}
+
+// Loading animation
+.loading-spinner {
+  @apply animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600;
+}
+
+// Table hover effects
+.participant-row {
+  @apply hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200;
+}
+
+// Search and filter section
+.filters-section {
+  @apply bg-white dark:bg-gray-800 shadow rounded-lg p-4;
+}
+
+// Empty state
+.empty-state {
+  @apply text-center py-12;
+  
+  .empty-icon {
+    @apply mx-auto h-12 w-12 text-gray-400;
+  }
+  
+  .empty-title {
+    @apply mt-2 text-sm font-medium text-gray-900 dark:text-white;
+  }
+  
+  .empty-description {
+    @apply mt-1 text-sm text-gray-500 dark:text-gray-400;
+  }
+}

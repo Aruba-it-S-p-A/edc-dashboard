@@ -1,0 +1,198 @@
+{
+  "participants": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "name": "customer0122",
+      "did": "did:web:customer0122.example.com",
+      "host": "k8s-cluster-01.example.com",
+      "currentOperation": "ACTIVE",
+      "metadata": {
+        "environment": "production",
+        "region": "eu-west-1",
+        "version": "1.2.3"
+      },
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2025-09-04T14:16:35.182Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "name": "customer02",
+      "did": "did:web:customer02.example.com",
+      "host": "k8s-cluster-01.example.com",
+      "currentOperation": "PROVISION_IN_PROGRESS",
+      "metadata": {
+        "environment": "staging",
+        "region": "eu-west-1",
+        "version": "1.2.3"
+      },
+      "provisioningStartedAt": "2024-01-20T14:20:00Z",
+      "lastOperationAt": "2024-01-20T14:20:00Z",
+      "createdAt": "2024-01-20T14:20:00Z",
+      "updatedAt": "2024-01-20T14:20:00Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "name": "customer03",
+      "did": "did:web:customer03.example.com",
+      "host": "k8s-cluster-02.example.com",
+      "currentOperation": "ACTIVE",
+      "metadata": {
+        "environment": "production",
+        "region": "us-east-1",
+        "version": "1.1.8"
+      },
+      "provisioningStartedAt": "2024-01-10T09:15:00Z",
+      "lastOperationAt": "2024-01-18T16:30:00Z",
+      "createdAt": "2024-01-10T09:15:00Z",
+      "updatedAt": "2024-01-18T16:30:00Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440004",
+      "name": "customer04",
+      "did": "did:web:customer04.example.com",
+      "host": "k8s-cluster-01.example.com",
+      "currentOperation": "PROVISION_FAILED",
+      "metadata": {
+        "environment": "staging",
+        "region": "eu-west-1",
+        "version": "1.2.3",
+        "error": "Kubernetes namespace creation failed"
+      },
+      "provisioningStartedAt": "2024-01-19T08:45:00Z",
+      "lastOperationAt": "2024-01-19T09:15:00Z",
+      "createdAt": "2024-01-19T08:45:00Z",
+      "updatedAt": "2024-01-19T09:15:00Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440005",
+      "name": "customer05",
+      "did": "did:web:customer05.example.com",
+      "host": "k8s-cluster-02.example.com",
+      "currentOperation": "DEPROVISION_IN_PROGRESS",
+      "metadata": {
+        "environment": "staging",
+        "region": "us-east-1",
+        "version": "1.0.5"
+      },
+      "provisioningStartedAt": "2024-01-12T11:20:00Z",
+      "lastOperationAt": "2024-01-21T10:00:00Z",
+      "createdAt": "2024-01-12T11:20:00Z",
+      "updatedAt": "2024-01-21T10:00:00Z"
+    },
+    {
+      "id": "1864ddb3-03fb-40e7-8cb7-0e59e1fd1f07",
+      "name": "test-participant",
+      "did": "did:web:test-participant.example.com",
+      "host": "k8s-cluster-01.example.com",
+      "currentOperation": "PROVISION_IN_PROGRESS",
+      "metadata": {
+        "environment": "test"
+      },
+      "provisioningStartedAt": "2025-09-04T14:15:19.872Z",
+      "lastOperationAt": "2025-09-04T14:15:19.872Z",
+      "createdAt": "2025-09-04T14:15:19.872Z",
+      "updatedAt": "2025-09-04T14:15:19.872Z"
+    },
+    {
+      "id": "0a556a25-abe2-4968-a3b5-964e3f2b304a",
+      "name": "aaa",
+      "did": "did:web:aaa.example.com",
+      "host": "k8s-cluster-02.example.com",
+      "currentOperation": "PROVISION_IN_PROGRESS",
+      "metadata": {},
+      "provisioningStartedAt": "2025-09-04T14:17:32.913Z",
+      "lastOperationAt": "2025-09-04T14:17:32.913Z",
+      "createdAt": "2025-09-04T14:17:32.913Z",
+      "updatedAt": "2025-09-04T14:17:32.913Z"
+    }
+  ],
+  "credentials": [
+    {
+      "id": "cred-001",
+      "participantId": "550e8400-e29b-41d4-a716-446655440001",
+      "format": "jwt_vc",
+      "type": "VerifiableCredential",
+        "credentialId": "vc-customer01-001",
+        "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "metadata": {
+          "issuer": "dataspace-ca",
+          "subject": "customer01",
+        "expiresAt": "2025-01-15T10:30:00Z"
+      },
+      "createdAt": "2024-01-15T11:00:00Z",
+      "updatedAt": "2024-01-15T11:00:00Z"
+    },
+    {
+      "id": "cred-002",
+      "participantId": "550e8400-e29b-41d4-a716-446655440001",
+      "format": "jwt_vc",
+      "type": "DataSpaceCredential",
+        "credentialId": "vc-customer01-002",
+        "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "metadata": {
+          "issuer": "dataspace-authority",
+          "subject": "customer01",
+        "expiresAt": "2025-01-15T10:30:00Z"
+      },
+      "createdAt": "2024-01-15T11:15:00Z",
+      "updatedAt": "2024-01-15T11:15:00Z"
+    },
+    {
+      "id": "cred-003",
+      "participantId": "550e8400-e29b-41d4-a716-446655440003",
+      "format": "jwt_vc",
+      "type": "VerifiableCredential",
+        "credentialId": "vc-customer03-001",
+        "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "metadata": {
+          "issuer": "dataspace-ca",
+          "subject": "customer03",
+        "expiresAt": "2025-01-10T09:15:00Z"
+      },
+      "createdAt": "2024-01-10T09:30:00Z",
+      "updatedAt": "2024-01-10T09:30:00Z"
+    }
+  ],
+  "operations": [
+    {
+      "id": "9b1aebe8-987c-4edb-9885-f9083c69a212",
+      "eventType": "PROVISION_STARTED",
+      "eventPayload": {
+        "message": "Provisioning started"
+      },
+      "createdAt": "2025-01-22T16:32:21Z"
+    },
+    {
+      "id": "8c2bebe8-987c-4edb-9885-f9083c69a213",
+      "eventType": "PROVISION_COMPLETED",
+      "eventPayload": {
+        "message": "Provisioning completed successfully"
+      },
+      "createdAt": "2025-01-22T17:45:30Z"
+    },
+    {
+      "id": "7d3bebe8-987c-4edb-9885-f9083c69a214",
+      "eventType": "CREDENTIALS_UPDATED",
+      "eventPayload": {
+        "message": "Credentials updated for participant"
+      },
+      "createdAt": "2025-01-22T18:15:45Z"
+    },
+    {
+      "id": "6e4bebe8-987c-4edb-9885-f9083c69a215",
+      "eventType": "METADATA_UPDATED",
+      "eventPayload": {
+        "message": "Participant metadata updated"
+      },
+      "createdAt": "2025-01-22T19:20:12Z"
+    },
+    {
+      "id": "5f5bebe8-987c-4edb-9885-f9083c69a216",
+      "eventType": "DEPROVISION_STARTED",
+      "eventPayload": {
+        "message": "Deprovisioning started"
+      },
+      "createdAt": "2025-01-22T20:30:00Z"
+    }
+  ]
+}

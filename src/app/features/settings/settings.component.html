@@ -1,0 +1,678 @@
+<div class="p-6 max-w-6xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ 'settings.title' | translate }}</h1>
+    <p class="mt-2 text-gray-600 dark:text-gray-400">
+      {{ 'settings.subtitle' | translate }}
+    </p>
+  </div>
+
+  <!-- Settings Tabs -->
+  <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+    <nav class="-mb-px flex space-x-8">
+      @for (tab of settingsTabs; track tab.id) {
+        <button (click)="activeTab = tab.id"
+                [class.border-primary-500]="activeTab === tab.id"
+                [class.text-primary-600]="activeTab === tab.id"
+                [class.dark:text-primary-400]="activeTab === tab.id"
+                [class.border-transparent]="activeTab !== tab.id"
+                [class.text-gray-500]="activeTab !== tab.id"
+                [class.hover:text-gray-700]="activeTab !== tab.id"
+                [class.dark:text-gray-400]="activeTab !== tab.id"
+                [class.dark:hover:text-gray-300]="activeTab !== tab.id"
+                class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
+          <div class="flex items-center">
+            <span [innerHTML]="tab.icon" class="w-5 h-5 mr-2"></span>
+            {{ tab.label }}
+          </div>
+        </button>
+      }
+    </nav>
+  </div>
+
+  @if (preferences$ | async; as prefs) {
+    <div>
+    <!-- Appearance Tab -->
+    @if (activeTab === 'appearance') {
+      <div class="space-y-8">
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-6">{{ 'settings.themeAndAppearance' | translate }}</h3>
+        
+        <!-- Language Selection -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            {{ 'settings.language' | translate }}
+          </label>
+          <select [(ngModel)]="prefs.language" 
+                  (ngModelChange)="updatePreference('language', $event)"
+                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+            @for (lang of getSupportedLanguages(); track lang.code) {
+              <option [value]="lang.code">{{ lang.name }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Font Size -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            {{ 'settings.fontSize' | translate }}
+          </label>
+          <select [(ngModel)]="prefs.fontSize" 
+                  (ngModelChange)="updatePreference('fontSize', $event)"
+                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+            <option value="small">{{ 'settings.small' | translate }}</option>
+            <option value="medium">{{ 'settings.medium' | translate }}</option>
+            <option value="large">{{ 'settings.large' | translate }}</option>
+          </select>
+        </div>
+
+        <!-- Toggle Options -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.compactMode' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.compactModeDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('compactMode', !prefs.compactMode)"
+                    [class.bg-primary-600]="prefs.compactMode"
+                    [class.bg-gray-200]="!prefs.compactMode"
+                    [class.dark:bg-gray-600]="!prefs.compactMode"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.compactMode"
+                    [class.translate-x-0]="!prefs.compactMode"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.animations' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.animationsDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('animations', !prefs.animations)"
+                    [class.bg-primary-600]="prefs.animations"
+                    [class.bg-gray-200]="!prefs.animations"
+                    [class.dark:bg-gray-600]="!prefs.animations"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.animations"
+                    [class.translate-x-0]="!prefs.animations"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Branding Tab -->
+    @if (activeTab === 'branding') {
+      <div class="space-y-8">
+        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-6">Tenant Branding</h3>
+          
+          <div class="space-y-6">
+            <div class="space-y-6">
+              <!-- Logo Section -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Logo
+                  </label>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Company logo (max 500KB, PNG/JPG)</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                  @if (hasBrandingValue('logo')) {
+                    <div class="flex items-center space-x-3">
+                      <img [src]="getBrandingValue('logo', '')" 
+                           alt="Current logo" 
+                           class="w-12 h-12 object-contain rounded border border-gray-300 dark:border-gray-600">
+                      <button (click)="removeLogo()" 
+                              [disabled]="isUpdatingBranding || isUploadingLogo"
+                              class="inline-flex items-center px-3 py-1 border border-red-300 dark:border-red-600 shadow-sm text-xs font-medium rounded text-red-700 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Remove
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="flex items-center justify-center w-12 h-12 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded">
+                      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                      </svg>
+                    </div>
+                  }
+                  <label class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    @if (isUploadingLogo) {
+                      Uploading...
+                    } @else {
+                      Upload Logo
+                    }
+                    <input type="file" 
+                           class="hidden" 
+                           accept="image/*" 
+                           (change)="onLogoFileSelected($event)"
+                           [disabled]="isUpdatingBranding || isUploadingLogo">
+                  </label>
+                </div>
+              </div>
+
+              <!-- Background Color -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Background Color
+                  </label>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Main application background</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <input type="color" 
+                         [value]="getBrandingValue('backgroundColor', '#0f172a')"
+                         (change)="updateBrandingColor('backgroundColor', $any($event.target).value)"
+                         [disabled]="isUpdatingBranding"
+                         class="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
+                  <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                    {{ getBrandingValue('backgroundColor', '#0f172a') }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Header Color -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Header Color
+                  </label>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Top navigation bar</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <input type="color" 
+                         [value]="getBrandingValue('headerColor', '#1f2937')"
+                         (change)="updateBrandingColor('headerColor', $any($event.target).value)"
+                         [disabled]="isUpdatingBranding"
+                         class="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
+                  <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                    {{ getBrandingValue('headerColor', '#1f2937') }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Sidebar Color -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Sidebar Color
+                  </label>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Left navigation panel</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <input type="color" 
+                         [value]="getBrandingValue('sidenavColor', '#1f2937')"
+                         (change)="updateBrandingColor('sidenavColor', $any($event.target).value)"
+                         [disabled]="isUpdatingBranding"
+                         class="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
+                  <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                    {{ getBrandingValue('sidenavColor', '#1f2937') }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Card Color -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Card Color
+                  </label>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Cards, tables, and content panels</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <input type="color" 
+                         [value]="getBrandingValue('cardColor', '#1f2937')"
+                         (change)="updateBrandingColor('cardColor', $any($event.target).value)"
+                         [disabled]="isUpdatingBranding"
+                         class="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
+                  <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                    {{ getBrandingValue('cardColor', '#1f2937') }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Text Color -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Text Color
+                  </label>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Primary text color</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <input type="color" 
+                         [value]="getBrandingValue('textColor', '#f9fafb')"
+                         (change)="updateBrandingColor('textColor', $any($event.target).value)"
+                         [disabled]="isUpdatingBranding"
+                         class="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
+                  <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                    {{ getBrandingValue('textColor', '#f9fafb') }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Primary Color -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Primary Color
+                  </label>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Buttons and interactive elements</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <input type="color" 
+                         [value]="getBrandingValue('primaryColor', '#3b82f6')"
+                         (change)="updateBrandingColor('primaryColor', $any($event.target).value)"
+                         [disabled]="isUpdatingBranding"
+                         class="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
+                  <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                    {{ getBrandingValue('primaryColor', '#3b82f6') }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Primary Color Hover -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Primary Color Hover
+                  </label>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Hover state color for buttons</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <input type="color" 
+                         [value]="getBrandingValue('primaryColorHover', '#2563eb')"
+                         (change)="updateBrandingColor('primaryColorHover', $any($event.target).value)"
+                         [disabled]="isUpdatingBranding"
+                         class="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
+                  <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                    {{ getBrandingValue('primaryColorHover', '#2563eb') }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Save/Cancel Buttons -->
+              @if (hasPendingChanges) {
+                <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">Pending Changes</h4>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">You have unsaved changes</p>
+                    </div>
+                    <div class="flex space-x-3">
+                      <button (click)="cancelBrandingChanges()" 
+                              [disabled]="isUpdatingBranding"
+                              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Cancel
+                      </button>
+                      <button (click)="saveBrandingChanges()" 
+                              [disabled]="isUpdatingBranding"
+                              class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              <!-- Reset Button -->
+              <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">Reset to Default</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Restore all colors to default values</p>
+                  </div>
+                  <button (click)="resetBrandingToDefault()" 
+                          [disabled]="isUpdatingBranding"
+                          class="inline-flex items-center px-4 py-2 border border-red-300 dark:border-red-600 shadow-sm text-sm font-medium rounded-md text-red-700 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Reset All Colors
+                  </button>
+                </div>
+              </div>
+
+              @if (isUpdatingBranding) {
+                <div class="flex items-center justify-center py-4">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Updating branding...</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Dashboard Tab -->
+    @if (activeTab === 'dashboard') {
+      <div class="space-y-8">
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-6">{{ 'settings.dashboardSettings' | translate }}</h3>
+
+        <!-- Auto-refresh -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            Auto-refresh Interval (seconds)
+          </label>
+          <input type="range" 
+                 [(ngModel)]="prefs.autoRefreshInterval" 
+                 (ngModelChange)="updatePreference('autoRefreshInterval', $event)"
+                 min="5" max="300" step="5"
+                 class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+          <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <span>5s</span>
+            <span class="font-medium">{{ prefs.autoRefreshInterval }}s</span>
+            <span>5min</span>
+          </div>
+        </div>
+
+        <!-- Page Size -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            Default Page Size
+          </label>
+          <select [(ngModel)]="prefs.defaultPageSize" 
+                  (ngModelChange)="updatePreference('defaultPageSize', $event)"
+                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+            <option [value]="5">5 items</option>
+            <option [value]="10">10 items</option>
+            <option [value]="25">25 items</option>
+            <option [value]="50">50 items</option>
+            <option [value]="100">100 items</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Advanced Tab -->
+    @if (activeTab === 'advanced') {
+      <div class="space-y-8">
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-6">{{ 'settings.advancedSettings' | translate }}</h3>
+        
+        <!-- Developer Mode -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.developerMode' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.developerModeDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('developerMode', !prefs.developerMode)"
+                    [class.bg-primary-600]="prefs.developerMode"
+                    [class.bg-gray-200]="!prefs.developerMode"
+                    [class.dark:bg-gray-600]="!prefs.developerMode"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.developerMode"
+                    [class.translate-x-0]="!prefs.developerMode"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.debugMode' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.debugModeDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('debugMode', !prefs.debugMode)"
+                    [class.bg-primary-600]="prefs.debugMode"
+                    [class.bg-gray-200]="!prefs.debugMode"
+                    [class.dark:bg-gray-600]="!prefs.debugMode"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.debugMode"
+                    [class.translate-x-0]="!prefs.debugMode"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.experimentalFeatures' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.experimentalFeaturesDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('experimentalFeatures', !prefs.experimentalFeatures)"
+                    [class.bg-primary-600]="prefs.experimentalFeatures"
+                    [class.bg-gray-200]="!prefs.experimentalFeatures"
+                    [class.dark:bg-gray-600]="!prefs.experimentalFeatures"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.experimentalFeatures"
+                    [class.translate-x-0]="!prefs.experimentalFeatures"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- API Endpoint -->
+        <div class="mt-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            API Endpoint
+          </label>
+          <input type="url" 
+                 [(ngModel)]="prefs.apiEndpoint" 
+                 (ngModelChange)="updatePreference('apiEndpoint', $event)"
+                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
+                 [placeholder]="'api.baseUrlPlaceholder' | translate">
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Accessibility Tab -->
+    @if (activeTab === 'accessibility') {
+      <div class="space-y-8">
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-6">{{ 'settings.accessibilityOptions' | translate }}</h3>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.highContrast' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.highContrastDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('highContrast', !prefs.highContrast)"
+                    [class.bg-primary-600]="prefs.highContrast"
+                    [class.bg-gray-200]="!prefs.highContrast"
+                    [class.dark:bg-gray-600]="!prefs.highContrast"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.highContrast"
+                    [class.translate-x-0]="!prefs.highContrast"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.reducedMotion' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.reducedMotionDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('reducedMotion', !prefs.reducedMotion)"
+                    [class.bg-primary-600]="prefs.reducedMotion"
+                    [class.bg-gray-200]="!prefs.reducedMotion"
+                    [class.dark:bg-gray-600]="!prefs.reducedMotion"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.reducedMotion"
+                    [class.translate-x-0]="!prefs.reducedMotion"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.screenReaderSupport' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.screenReaderDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('screenReader', !prefs.screenReader)"
+                    [class.bg-primary-600]="prefs.screenReader"
+                    [class.bg-gray-200]="!prefs.screenReader"
+                    [class.dark:bg-gray-600]="!prefs.screenReader"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.screenReader"
+                    [class.translate-x-0]="!prefs.screenReader"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.keyboardNavigation' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.keyboardNavigationDescription' | translate }}</p>
+            </div>
+            <button type="button" 
+                    (click)="updatePreference('keyboardNavigation', !prefs.keyboardNavigation)"
+                    [class.bg-primary-600]="prefs.keyboardNavigation"
+                    [class.bg-gray-200]="!prefs.keyboardNavigation"
+                    [class.dark:bg-gray-600]="!prefs.keyboardNavigation"
+                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+              <span [class.translate-x-5]="prefs.keyboardNavigation"
+                    [class.translate-x-0]="!prefs.keyboardNavigation"
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Data Tab -->
+    @if (activeTab === 'data') {
+      <div class="space-y-8">
+      <!-- Export/Import Section -->
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-6">{{ 'settings.dataManagement' | translate }}</h3>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.exportSettings' | translate }}</h4>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.exportSettingsDescription' | translate }}</p>
+            </div>
+            <button (click)="exportSettings()" 
+                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Export
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.importSettings' | translate }}</h4>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.importSettingsDescription' | translate }}</p>
+            </div>
+            <input #fileInput type="file" accept=".json" (change)="onFileSelected($event)" class="hidden">
+            <button (click)="fileInput.click()" 
+                    class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              Import
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.resetAllSettings' | translate }}</h4>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'settings.resetAllSettingsDescription' | translate }}</p>
+            </div>
+            <button (click)="resetSettings()" 
+                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usage Statistics -->
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-6">{{ 'settings.usageStatistics' | translate }}</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          @if (usageStats) {
+            <div class="space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{ 'settings.themePreference' | translate }}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white capitalize">{{ usageStats.themeUsage }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{ 'settings.savedSearches' | translate }}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ usageStats.dataUsage.savedSearchesCount }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{ 'settings.favoriteFilters' | translate }}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ usageStats.dataUsage.favoriteFiltersCount }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500 dark:text-gray-400">Auto-refresh Interval</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ usageStats.dataUsage.autoRefreshInterval }}s</span>
+              </div>
+            </div>
+          }
+
+          @if (usageStats) {
+            <div class="space-y-3">
+              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'settings.enabledFeatures' | translate }}</h4>
+              <div class="space-y-2">
+                @for (feature of getEnabledFeatures(); track feature) {
+                  <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span class="text-sm text-gray-600 dark:text-gray-400 capitalize">{{ formatFeatureName(feature) }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-8 flex justify-between items-center bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        Settings are automatically saved
+      </div>
+      <div class="space-x-3">
+        <button (click)="showKeyboardShortcuts()" 
+                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+          </svg>
+          Keyboard Shortcuts
+        </button>
+      </div>
+    </div>
+    }
+    </div>
+  }
+</div>

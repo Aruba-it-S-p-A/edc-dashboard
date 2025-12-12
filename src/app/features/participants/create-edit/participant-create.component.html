@@ -1,0 +1,521 @@
+<div class="p-6">
+  <!-- Page header -->
+  <div class="mb-8">
+    <div class="flex items-center">
+      <button
+        (click)="onCancel()"
+        class="mr-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        [title]="'common.cancel' | translate"
+      >
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
+          {{ 'participants.createNewParticipant' | translate }}
+        </h1>
+        <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
+          {{ 'participants.createNewDescription' | translate }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error message -->
+  @if (error) {
+    <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+            {{ 'common.error' | translate }}
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+            {{ error }}
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Form -->
+  <div class="max-w-4xl">
+    <form [formGroup]="participantForm" (ngSubmit)="onSubmit()" class="space-y-8">
+      
+      <!-- Company/Organization Section -->
+      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+        <div class="flex items-center mb-4">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-lg font-medium text-blue-900 dark:text-blue-100">
+              {{ 'participants.companyInfo' | translate }}
+            </h3>
+            <p class="text-sm text-blue-700 dark:text-blue-300">
+              {{ 'participants.companyInfoDescription' | translate }}
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Company Name field -->
+          <div>
+            <label for="companyName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ 'participants.companyName' | translate }} *
+            </label>
+            <input
+              type="text"
+              id="companyName"
+              formControlName="companyName"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              [class.border-red-300]="getFieldError('companyName')"
+              [placeholder]="'participants.companyNamePlaceholder' | translate"
+            />
+            @if (getFieldError('companyName')) {
+              <p class="mt-1 text-sm text-red-600 dark:text-red-400">
+                {{ getFieldError('companyName') }}
+              </p>
+            }
+          </div>
+
+          <!-- Company Description field -->
+          <div>
+            <label for="companyDescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ 'participants.companyDescription' | translate }}
+            </label>
+            <textarea
+              id="companyDescription"
+              formControlName="companyDescription"
+              rows="3"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              [placeholder]="'participants.companyDescriptionPlaceholder' | translate"
+            ></textarea>
+            @if (getFieldError('companyDescription')) {
+              <p class="mt-1 text-sm text-red-600 dark:text-red-400">
+                {{ getFieldError('companyDescription') }}
+              </p>
+            }
+          </div>
+
+          <!-- Company Details -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Company Type -->
+            <div>
+              <label for="companyType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.companyType' | translate }}
+              </label>
+              <select
+                id="companyType"
+                formControlName="companyType"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              >
+                <option value="">{{ 'participants.selectCompanyType' | translate }}</option>
+                <option value="SRL">{{ 'participants.companyTypeSRL' | translate }}</option>
+                <option value="SPA">{{ 'participants.companyTypeSPA' | translate }}</option>
+                <option value="SNC">{{ 'participants.companyTypeSNC' | translate }}</option>
+                <option value="SAS">{{ 'participants.companyTypeSAS' | translate }}</option>
+                <option value="OTHER">{{ 'participants.companyTypeOther' | translate }}</option>
+              </select>
+            </div>
+
+            <!-- VAT Number -->
+            <div>
+              <label for="vatNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.vatNumber' | translate }}
+              </label>
+              <input
+                type="text"
+                id="vatNumber"
+                formControlName="vatNumber"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.vatNumberPlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Fiscal Code -->
+            <div>
+              <label for="fiscalCode" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.fiscalCode' | translate }}
+              </label>
+              <input
+                type="text"
+                id="fiscalCode"
+                formControlName="fiscalCode"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.fiscalCodePlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Company Email -->
+            <div>
+              <label for="companyEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.companyEmail' | translate }}
+              </label>
+              <input
+                type="email"
+                id="companyEmail"
+                formControlName="companyEmail"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.companyEmailPlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Company Phone -->
+            <div>
+              <label for="companyPhone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.companyPhone' | translate }}
+              </label>
+              <input
+                type="tel"
+                id="companyPhone"
+                formControlName="companyPhone"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.companyPhonePlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Website -->
+            <div>
+              <label for="companyWebsite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.companyWebsite' | translate }}
+              </label>
+              <input
+                type="url"
+                id="companyWebsite"
+                formControlName="companyWebsite"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.companyWebsitePlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Industry -->
+            <div>
+              <label for="companyIndustry" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.companyIndustry' | translate }}
+              </label>
+              <select
+                id="companyIndustry"
+                formControlName="companyIndustry"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              >
+                <option value="">{{ 'participants.selectIndustry' | translate }}</option>
+                <option value="TECHNOLOGY">{{ 'participants.industryTechnology' | translate }}</option>
+                <option value="MANUFACTURING">{{ 'participants.industryManufacturing' | translate }}</option>
+                <option value="FINANCE">{{ 'participants.industryFinance' | translate }}</option>
+                <option value="HEALTHCARE">{{ 'participants.industryHealthcare' | translate }}</option>
+                <option value="RETAIL">{{ 'participants.industryRetail' | translate }}</option>
+                <option value="OTHER">{{ 'participants.industryOther' | translate }}</option>
+              </select>
+            </div>
+
+            <!-- Country -->
+            <div>
+              <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.country' | translate }}
+              </label>
+              <select
+                id="country"
+                formControlName="country"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              >
+                <option value="">{{ 'participants.selectCountry' | translate }}</option>
+                <option value="IT">{{ 'participants.countryItaly' | translate }}</option>
+                <option value="DE">{{ 'participants.countryGermany' | translate }}</option>
+                <option value="FR">{{ 'participants.countryFrance' | translate }}</option>
+                <option value="ES">{{ 'participants.countrySpain' | translate }}</option>
+                <option value="US">{{ 'participants.countryUSA' | translate }}</option>
+              </select>
+            </div>
+
+            <!-- Region -->
+            <div>
+              <label for="region" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.region' | translate }}
+              </label>
+              <input
+                type="text"
+                id="region"
+                formControlName="region"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.regionPlaceholder' | translate"
+              />
+            </div>
+
+            <!-- City -->
+            <div>
+              <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.city' | translate }}
+              </label>
+              <input
+                type="text"
+                id="city"
+                formControlName="city"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.cityPlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Address -->
+            <div>
+              <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.address' | translate }}
+              </label>
+              <input
+                type="text"
+                id="address"
+                formControlName="address"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.addressPlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Postal Code -->
+            <div>
+              <label for="postalCode" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.postalCode' | translate }}
+              </label>
+              <input
+                type="text"
+                id="postalCode"
+                formControlName="postalCode"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.postalCodePlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Business Size -->
+            <div>
+              <label for="businessSize" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.businessSize' | translate }}
+              </label>
+              <select
+                id="businessSize"
+                formControlName="businessSize"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              >
+                <option value="">{{ 'participants.selectBusinessSize' | translate }}</option>
+                <option value="STARTUP">{{ 'participants.businessSizeStartup' | translate }}</option>
+                <option value="SMALL">{{ 'participants.businessSizeSmall' | translate }}</option>
+                <option value="MEDIUM">{{ 'participants.businessSizeMedium' | translate }}</option>
+                <option value="LARGE">{{ 'participants.businessSizeLarge' | translate }}</option>
+                <option value="ENTERPRISE">{{ 'participants.businessSizeEnterprise' | translate }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Legal Acceptances -->
+          <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
+              {{ 'participants.legalAcceptances' | translate }}
+            </h4>
+            <div class="space-y-2">
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  formControlName="termsAccepted"
+                  class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                />
+                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  {{ 'participants.termsAccepted' | translate }}
+                </span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  formControlName="privacyAccepted"
+                  class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                />
+                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  {{ 'participants.privacyAccepted' | translate }}
+                </span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  formControlName="marketingAccepted"
+                  class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                />
+                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  {{ 'participants.marketingAccepted' | translate }}
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Section -->
+      <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
+        <div class="flex items-center mb-4">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-lg font-medium text-green-900 dark:text-green-100">
+              {{ 'participants.userInfo' | translate }}
+            </h3>
+            <p class="text-sm text-green-700 dark:text-green-300">
+              {{ 'participants.userInfoDescription' | translate }}
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Username field -->
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ 'participants.username' | translate }} *
+            </label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              [class.border-red-300]="getFieldError('username')"
+              [placeholder]="'participants.usernamePlaceholder' | translate"
+            />
+            @if (getFieldError('username')) {
+              <p class="mt-1 text-sm text-red-600 dark:text-red-400">
+                {{ getFieldError('username') }}
+              </p>
+            }
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ 'participants.usernameHelp' | translate }}
+            </p>
+          </div>
+
+          <!-- Password field -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ 'participants.password' | translate }} *
+            </label>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              [class.border-red-300]="getFieldError('password')"
+              [placeholder]="'participants.passwordPlaceholder' | translate"
+            />
+            @if (getFieldError('password')) {
+              <p class="mt-1 text-sm text-red-600 dark:text-red-400">
+                {{ getFieldError('password') }}
+              </p>
+            }
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ 'participants.passwordHelp' | translate }}
+            </p>
+          </div>
+
+          <!-- User Details -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- First Name -->
+            <div>
+              <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.firstName' | translate }}
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.firstNamePlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Last Name -->
+            <div>
+              <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.lastName' | translate }}
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.lastNamePlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label for="userEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.userEmail' | translate }}
+              </label>
+              <input
+                type="email"
+                id="userEmail"
+                formControlName="userEmail"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.userEmailPlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Phone -->
+            <div>
+              <label for="userPhone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.userPhone' | translate }}
+              </label>
+              <input
+                type="tel"
+                id="userPhone"
+                formControlName="userPhone"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                [placeholder]="'participants.userPhonePlaceholder' | translate"
+              />
+            </div>
+
+            <!-- Role -->
+            <div>
+              <label for="userRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'participants.userRole' | translate }}
+              </label>
+              <select
+                id="userRole"
+                formControlName="userRole"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              >
+                <option value="">{{ 'participants.selectRole' | translate }}</option>
+                <option value="ADMIN">{{ 'participants.roleAdmin' | translate }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form actions -->
+      <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+        >
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button
+          type="submit"
+          [disabled]="!isFormValid"
+          class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          @if (isSubmitting) {
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          }
+          {{ 'common.create' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

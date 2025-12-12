@@ -1,0 +1,20 @@
+{
+  "production": true,
+  "apiUrl": "https://prod-url.com",
+  "appName": "Dataspace Platform",
+  "version": "1.0.0",
+  "features": {
+    "enableMockData": false,
+    "enableAnalytics": true,
+    "enableDebugMode": false
+  },
+  "auth": {
+    "enableAuth": true,
+    "tokenKey": "edc-public-dashboard-token",
+    "requiredRole": "EDC_ADMIN"
+  },
+  "pagination": {
+    "defaultPageSize": 20,
+    "maxPageSize": 100
+  }
+}

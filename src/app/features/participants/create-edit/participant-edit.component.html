@@ -1,0 +1,136 @@
+<div class="p-6">
+  <!-- Page header -->
+  <div class="mb-8">
+    <div class="flex items-center">
+      <button
+        (click)="onCancel()"
+        class="mr-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        [title]="'common.cancel' | translate"
+      >
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
+          {{ 'participants.editParticipant' | translate }}
+        </h1>
+        <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
+          {{ 'participants.editParticipant.subtitle' | translate }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error message -->
+  @if (error) {
+    <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+            {{ 'common.error' | translate }}
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+            {{ error }}
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Form -->
+  @if (participant$ | async; as participant) {
+    <div class="max-w-2xl">
+      <form [formGroup]="participantForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {{ 'participants.name' | translate }}
+          </label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            readonly
+            class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-100 dark:text-gray-400 shadow-sm sm:text-sm cursor-not-allowed"
+            [placeholder]="'participants.name' | translate"
+          />
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            {{ 'participants.nameReadonlyHelp' | translate }}
+          </p>
+        </div>
+
+        <!-- Description field -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {{ 'participants.description' | translate }}
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="3"
+            class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            [placeholder]="'participants.descriptionPlaceholder' | translate"
+          ></textarea>
+          @if (getFieldError('description')) {
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">
+              {{ getFieldError('description') }}
+            </p>
+          }
+        </div>
+
+
+        <!-- Metadata field -->
+        <div>
+          <label for="metadata" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {{ 'participants.metadata' | translate }}
+          </label>
+          <textarea
+            id="metadata"
+            formControlName="metadata"
+            rows="6"
+            class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm font-mono text-sm"
+            [class.border-red-300]="getFieldError('metadata')"
+            [placeholder]="'participants.metadataPlaceholder' | translate"
+          ></textarea>
+          @if (getFieldError('metadata')) {
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">
+              {{ getFieldError('metadata') }}
+            </p>
+          }
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            {{ 'participants.metadataHelp' | translate }}
+          </p>
+        </div>
+
+        <!-- Form actions -->
+        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+          >
+            {{ 'common.cancel' | translate }}
+          </button>
+          <button
+            type="submit"
+            [disabled]="!isFormValid"
+            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            @if (isSubmitting) {
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            }
+            {{ 'common.save' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

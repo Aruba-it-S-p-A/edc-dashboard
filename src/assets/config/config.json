@@ -1,0 +1,38 @@
+{
+  "production": true,
+  "apiUrl": "http://localhost:3002",
+  "appName": "Dataspace Platform",
+  "version": "1.0.0",
+  "features": {
+    "enableMockData": false,
+    "enableAnalytics": true,
+    "enableDebugMode": false
+  },
+  "auth": {
+    "enableAuth": false,
+    "tokenKey": "edc-public-dashboard-token",
+    "requiredRole": "EDC_ADMIN_TENANT",
+    "keycloak": {
+      "url": "https://identity.example.com",
+      "realm": "dataspace",
+      "clientId": "edc-public-dashboard",
+      "initOptions": {
+        "onLoad": "login-required",
+        "checkLoginIframe": false,
+        "pkceMethod": "S256"
+      },
+      "bearerExcludedUrls": [
+        "/assets",
+        "/favicon.ico"
+      ]
+    }
+  },
+  "pagination": {
+    "defaultPageSize": 20,
+    "maxPageSize": 100
+  },
+  "i18n": {
+    "defaultLanguage": "en",
+    "supportedLanguages": ["en", "it"]
+  }
+}

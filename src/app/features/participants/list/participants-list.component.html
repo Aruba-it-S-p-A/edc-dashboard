@@ -1,0 +1,300 @@
+<div class="p-6">
+  <!-- Page header -->
+  <div class="mb-8">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
+          {{ 'participants.title' | translate }}
+        </h1>
+        <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
+          {{ 'participants.subtitle' | translate }}
+        </p>
+      </div>
+      <a routerLink="/participants/create" 
+         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+        <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        {{ 'participants.addParticipant' | translate }}
+      </a>
+    </div>
+  </div>
+
+  <!-- Filters and search -->
+  <div class="mb-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- Status filter -->
+      <div>
+        <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          {{ 'participants.status' | translate }}
+        </label>
+        <select
+          id="status"
+          [(ngModel)]="selectedStatus"
+          (ngModelChange)="onStatusChange()"
+          class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+        >
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label | translate }}</option>
+          }
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Error message -->
+  @if (error$ | async; as error) {
+    <div class="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+            {{ 'common.error' | translate }}
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+            {{ error }}
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Loading state -->
+  @if (loading$ | async) {
+    <div class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      <span class="ml-2 text-gray-600 dark:text-gray-400">{{ 'common.loading' | translate }}</span>
+    </div>
+  } @else {
+    <!-- Participants table -->
+    @if (participants$ | async; as participants) {
+      @if (participants.length > 0) {
+        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {{ 'participants.name' | translate }}
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {{ 'participants.did' | translate }}
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {{ 'participants.host' | translate }}
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {{ 'participants.status' | translate }}
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {{ 'participants.createdAt' | translate }}
+                  </th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {{ 'participants.actions' | translate }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                @for (participant of participants; track participant.id) {
+                  <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10">
+                          <div class="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                            <span class="text-sm font-medium text-primary-600 dark:text-primary-200">
+                              {{ participant.name.charAt(0).toUpperCase() }}
+                            </span>
+                          </div>
+                        </div>
+                        <div class="ml-4">
+                          <div class="text-sm font-medium text-gray-900 dark:text-white">
+                            {{ participant.name }}
+                          </div>
+                          <div class="text-sm text-gray-500 dark:text-gray-400">
+                            ID: {{ participant.id }}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900 dark:text-white font-mono">
+                        {{ participant.did }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900 dark:text-white">
+                        {{ participant.host }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                            [class]="getParticipantStatusColor(participant.currentOperation)">
+                        @if (isParticipantTransitional(participant.currentOperation)) {
+                          <svg class="animate-spin -ml-1 mr-2 h-3 w-3" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        }
+                        {{ getParticipantStatusLabel(participant.currentOperation) }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {{ participant.createdAt | date:'short' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div class="flex justify-end space-x-2">
+                        <button
+                          (click)="viewParticipant(participant)"
+                          class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300"
+                          [title]="'participants.view' | translate"
+                        >
+                          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                          </svg>
+                        </button>
+                        <!-- <button
+                          (click)="editParticipant(participant)"
+                          class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                          [title]="'participants.edit' | translate"
+                        >
+                          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                          </svg>
+                        </button> -->
+                        <button
+                          (click)="deleteParticipant(participant)"
+                          [disabled]="!canDeleteParticipant(participant)"
+                          [class]="canDeleteParticipant(participant) 
+                            ? 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300' 
+                            : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'"
+                          [title]="canDeleteParticipant(participant) 
+                            ? ('participants.delete' | translate) 
+                            : ('participants.cannotDelete' | translate)"
+                        >
+                          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
+          <div class="flex-1 flex justify-between sm:hidden">
+            <button
+              (click)="onPageChange(currentPage - 1)"
+              [disabled]="!hasPreviousPage"
+              class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ 'common.previous' | translate }}
+            </button>
+            <button
+              (click)="onPageChange(currentPage + 1)"
+              [disabled]="!hasNextPage"
+              class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ 'common.next' | translate }}
+            </button>
+          </div>
+          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                {{ 'participants.showing' | translate }}
+                <span class="font-medium">{{ startItem }}</span>
+                {{ 'participants.of' | translate }}
+                <span class="font-medium">{{ endItem }}</span>
+                {{ 'participants.of' | translate }}
+                <span class="font-medium">{{ (totalCount$ | async) || 0 }}</span>
+                {{ 'participants.participants' | translate }}
+                @if (preferences$ | async; as prefs) {
+                  <span class="ml-2 text-gray-500 dark:text-gray-400">
+                    ({{ 'participants.pageSize' | translate }}: {{ prefs.defaultPageSize }})
+                  </span>
+                }
+              </p>
+              @if (preferences$ | async; as prefs) {
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                  @if (prefs.autoRefreshInterval > 0) {
+                    <div class="flex items-center space-x-2">
+                      <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span>Auto-refresh: {{ prefs.autoRefreshInterval }}s</span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <div>
+              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" [attr.aria-label]="'navigation.pagination' | translate">
+                <button
+                  (click)="onPageChange(currentPage - 1)"
+                  [disabled]="!hasPreviousPage"
+                  class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span class="sr-only">{{ 'common.previous' | translate }}</span>
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </button>
+                
+                @for (page of Array(totalPages); track $index) {
+                  <button
+                    (click)="onPageChange($index + 1)"
+                    [class]="$index + 1 === currentPage ? 'z-10 bg-primary-50 dark:bg-primary-900 border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-200' : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                    class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                  >
+                    {{ $index + 1 }}
+                  </button>
+                }
+                
+                <button
+                  (click)="onPageChange(currentPage + 1)"
+                  [disabled]="!hasNextPage"
+                  class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span class="sr-only">{{ 'common.next' | translate }}</span>
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <!-- Empty state -->
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-1.306-.835-2.418-2-2.83M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-1.306.835-2.418 2-2.83m0 0a3 3 0 012.83 0M9 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+            {{ 'participants.noParticipantsFound' | translate }}
+          </h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            {{ 'participants.createFirst' | translate }}
+          </p>
+          <div class="mt-6">
+            <a routerLink="/participants/create" 
+               class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+              <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              {{ 'participants.addParticipant' | translate }}
+            </a>
+          </div>
+        </div>
+      }
+    }
+  }
+</div>
